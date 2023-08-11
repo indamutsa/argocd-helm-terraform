@@ -1,0 +1,28 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+  # This will make sure that the application is deleted if the ArgoCD application is deleted
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default # logical grouping
+  source:
+    repoURL: https://github.com/indamutsa/argocd-helm-terraform.git
+    targetRevision: HEAD
+    path: environments/staging/apps
+  destination:
+    server: https://kubernetes.default.svc
+  # Enable argocd to deploy automatically  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
