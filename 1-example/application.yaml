@@ -14,6 +14,7 @@ spec:
     path: app
   destination:
     server: https://kubernetes.default.svc
+  # Enable argocd to deploy automatically  
   syncPolicy:
     automated:
       prune: true
