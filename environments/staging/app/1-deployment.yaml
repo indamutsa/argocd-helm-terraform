@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: indamutsa/nginx:102
+          image: indamutsa/nginx:v1.0.3
           ports:
             - containerPort: 80
           resources:
