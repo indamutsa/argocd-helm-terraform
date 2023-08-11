@@ -119,6 +119,20 @@ Port forward the argocd server
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
+Create a repo to track with argocd
+
+```bash
+gh repo create
+```
+
+and follow the instructions.
+
+After that we can add application yaml to instruct argocd to track our repo
+
+```bash
+kubectl apply -f 1-example/application.yaml
+```
+
 ````
 ```bash
 helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.35.4 -f terraform/argocd-default-values.yaml
