@@ -21,3 +21,10 @@ spec:
           image: indamutsa/nginx:v1.0.0
           ports:
             - containerPort: 80
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi      
