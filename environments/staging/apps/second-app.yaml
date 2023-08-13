@@ -1,8 +1,7 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app
+  name: second-app-bar
   namespace: argocd
   # This will make sure that the application is deleted if the ArgoCD application is deleted
   finalizers:

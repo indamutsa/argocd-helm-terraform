@@ -223,6 +223,12 @@ The app and second-app folders contain the namespace and deployment yaml files. 
 
 The app.yaml and second-app.yaml files are the ones that will be used by argocd to deploy the applications by using the application in 2-example folder.
 
+Apply the application.yaml in 2-example folder to argocd
+
+```bash
+kubectl apply -f 2-example/application.yaml
+```
+
 <!-- ```bash
 helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.35.4 -f terraform/argocd-default-values.yaml
 ```` -->

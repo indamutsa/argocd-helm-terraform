@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app
+  name: app-foo
   namespace: argocd
   # This will make sure that the application is deleted if the ArgoCD application is deleted
   finalizers:
@@ -25,4 +25,4 @@ spec:
       - Validate=true
       - CreateNamespace=false
       - PrunePropagationPolicy=foreground
-      - PruneLast=true
+      - PruneLast=true 
