@@ -29,6 +29,8 @@ sed -i -e "s/indamutsa\/nginx:.*/indamutsa\/nginx:$new_ver/g" /home/arsene/Proje
 
 # Commit and push
 # cd $tmp_dir
+git pull
+git add . ; git commit -m "Updated the repo by pulling from git!"
 git add .
 git commit -m "Update image to $new_ver"
 git push
