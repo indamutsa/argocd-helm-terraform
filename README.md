@@ -119,12 +119,6 @@ Port forward the argocd server
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
-Create a repo to track with argocd
-
-```bash
-gh repo create
-```
-
 and follow the instructions.
 
 After that we can add application yaml to instruct argocd to track our repo
@@ -169,6 +163,12 @@ We will add some configuration and build agent to automate the build process.
 10 directories, 21 files
 
 <!-- prettier-ignore-end -->
+
+Create a repo to track with argocd
+
+```bash
+gh repo create
+```
 
 The first example is made of a simple application that will be deployed in the argo namespace. We have a folder at the root called app which contains the namespace and the deployment yaml files. And we have folder called example 1. This folder contains the application.yaml file. The application.yaml file is the one that will be used by argocd to deploy the application.
 
