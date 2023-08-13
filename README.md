@@ -235,12 +235,6 @@ Delete the application in example 2 folder to clean up the resources
 kubectl delete -f 2-example/application.yaml
 ```
 
----
-
-For private image and github repository:
-
-Create a private image in docker
-
 <!-- ```bash
 helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.35.4 -f terraform/argocd-default-values.yaml
 ```` -->
