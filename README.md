@@ -77,13 +77,13 @@ To overwrite the default values, we can get the values file from the repo and ed
 helm show values argo/argo-cd --version 3.35.4 > argocd-values.yaml
 ```
 
-Initialize terraform
+Change the folder to terraform-cloud and initialize terraform to run argocd
 
 ```bash
 terraform init
 ```
 
-Apply it
+Apply it to run argocd
 
 ```bash
 terraform apply --auto-approve
@@ -107,7 +107,7 @@ Get the initial password
 kubectl get secrets argocd-initial-admin-secret -o yaml -n argocd
 ```
 
-Decode the password
+Decode the password | the username is `admin`
 
 ```bash
 echo -n 'password from above' | base64 -d
@@ -129,11 +129,67 @@ and follow the instructions.
 
 After that we can add application yaml to instruct argocd to track our repo
 
+We will add some configuration and build agent to automate the build process.
+
+<!-- prettier-ignore-start -->
+❯ tree
+.
+├── 1-example
+│   └── application.yaml
+├── 2-example
+│   └── application.yaml
+├── app
+│   ├── 0-namespace.yaml
+│   └── 1-deployment.yaml
+├── argocd-values.yaml
+├── build-agent.sh
+├── environments
+│   └── staging
+│       ├── app
+│       │   ├── 0-namespace.yaml
+│       │   └── 1-deployment.yaml
+│       ├── apps
+│       │   ├── app.yaml
+│       │   └── second-app.yaml
+│       └── second-app
+│           ├── 0-namespace.yaml
+│           └── 1-deployment.yaml
+├── README.md
+├── terraform-cloud
+│   ├── 0-provider.tf
+│   ├── 1-provider.tf
+│   ├── argocd-default-values.yaml
+│   ├── argocd-values.yaml
+│   ├── terraform.tfstate
+│   ├── terraform.tfstate.backup
+│   └── values
+│       └── argocd.yaml
+└── :wq
+
+10 directories, 21 files
+
+<!-- prettier-ignore-end -->
+
+The first example is made of a simple application that will be deployed in the argo namespace. We have a folder at the root called app which contains the namespace and the deployment yaml files. And we have folder called example 1. This folder contains the application.yaml file. The application.yaml file is the one that will be used by argocd to deploy the application.
+
+First apply the application.yaml file to argocd
+
 ```bash
 kubectl apply -f 1-example/application.yaml
 ```
 
-````
+Now change the tag and push the image to the registry using the build-agent.sh script. The build-agent.sh script will build the image and push it to the registry, and push the changes to the repo after updating 1-deployment.yaml file with the new tag using the `sed` command.
+
+```bash
+./build-agent.sh v1.0.6
+```
+
+We shall see that the application is deployed in the argo namespace inside the dashboard of argocd `http://localhost:8080`.
+
+````bash
+
+App of Apps pattern is used to manage several applications with a single application.
+
 ```bash
 helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.35.4 -f terraform/argocd-default-values.yaml
 ````
