@@ -130,24 +130,11 @@ We will add some configuration and build agent to automate the build process.
 .
 ├── 1-example
 │   └── application.yaml
-├── 2-example
-│   └── application.yaml
 ├── app
 │   ├── 0-namespace.yaml
 │   └── 1-deployment.yaml
 ├── argocd-values.yaml
 ├── build-agent.sh
-├── environments
-│   └── staging
-│       ├── app
-│       │   ├── 0-namespace.yaml
-│       │   └── 1-deployment.yaml
-│       ├── apps
-│       │   ├── app.yaml
-│       │   └── second-app.yaml
-│       └── second-app
-│           ├── 0-namespace.yaml
-│           └── 1-deployment.yaml
 ├── README.md
 ├── terraform-cloud
 │   ├── 0-provider.tf
@@ -186,10 +173,56 @@ Now change the tag and push the image to the registry using the build-agent.sh s
 
 We shall see that the application is deployed in the argo namespace inside the dashboard of argocd `http://localhost:8080`.
 
-````bash
+---
 
-App of Apps pattern is used to manage several applications with a single application.
+Now let us introduce another type of deployment.
+We have have 2-example folder which contains the application.yaml. It is called App of Apps pattern and it is used to manage several applications with a single application.
 
-```bash
+<!-- prettier-ignore-start -->
+❯ tree
+.
+├── 1-example
+│   └── application.yaml
+├── 2-example
+│   └── application.yaml
+├── app
+│   ├── 0-namespace.yaml
+│   └── 1-deployment.yaml
+├── argocd-values.yaml
+├── build-agent.sh
+├── environments
+│   └── staging
+│       ├── app
+│       │   ├── 0-namespace.yaml
+│       │   └── 1-deployment.yaml
+│       ├── apps
+│       │   ├── app.yaml
+│       │   └── second-app.yaml
+│       └── second-app
+│           ├── 0-namespace.yaml
+│           └── 1-deployment.yaml
+├── README.md
+├── terraform-cloud
+│   ├── 0-provider.tf
+│   ├── 1-provider.tf
+│   ├── argocd-default-values.yaml
+│   ├── argocd-values.yaml
+│   ├── terraform.tfstate
+│   ├── terraform.tfstate.backup
+│   └── values
+│       └── argocd.yaml
+└── :wq
+
+10 directories, 21 files
+
+<!-- prettier-ignore-end -->
+
+The tree structure above introduces a way to use the application in 2-example folder to deploy the applications in the environments folder. The environments folder contains the staging folder which contains the app and second-app folders.
+
+The app and second-app folders contain the namespace and deployment yaml files. The staging folder contains the app.yaml and second-app.yaml files.
+
+The app.yaml and second-app.yaml files are the ones that will be used by argocd to deploy the applications by using the application in 2-example folder.
+
+<!-- ```bash
 helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.35.4 -f terraform/argocd-default-values.yaml
-````
+```` -->
