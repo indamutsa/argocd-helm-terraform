@@ -7,10 +7,10 @@ new_ver=$1
 
 echo "new version: $new_ver"
 
-# docker pull indamutsa/nginx:v1.0.2
+# docker pull indamutsa/nginx:v1.0.3
 
 # Simulate release of the new docker images
-docker tag indamutsa/nginx:v1.0.2 indamutsa/nginx:$new_ver
+docker tag indamutsa/nginx:v1.0.3 indamutsa/nginx:$new_ver
 
 # Push new version to dockerhub
 docker push indamutsa/nginx:$new_ver
