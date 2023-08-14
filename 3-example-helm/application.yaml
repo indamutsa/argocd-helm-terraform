@@ -1,0 +1,41 @@
+---
+apiVersion: argoproj.io/v1alpha1 # The API version of the resource type
+kind: Application # The type of the resource
+metadata:
+  name: metrics-server # The name of the resource
+  namespace: argocd # The namespace of the resource
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # The finalizer of the resource
+spec:
+  project: default # The project of the resource
+  source:
+    repoURL: https://kubernetes-sigs.github.io/metrics-server/ # The URL of the repository
+    targetRevision: 3.8.4 # The target revision of the repository
+    chart: metrics-server # The chart of the repository
+    helm:
+      version: v3 # The version of Helm
+      releaseName: my-metrics # The name of the release
+      passCredentials: false # Whether to pass credentials
+      parameters:
+        - name: "image.tag" # The name of the parameter
+          value: v0.6.2 # The value of the parameter
+      values: | # The values of the chart
+        defaultArgs:
+        - --cert-dir=/tmp
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls
+  destination:
+    server: https://kubernetes.default.svc # The server of the destination
+    namespace: monitoring # The namespace of the destination
+  syncPolicy:
+    automated:
+      prune: true # Whether to prune resources
+      selfHeal: true # Whether to self-heal resources
+      allowEmpty: false # Whether to allow empty resources
+    syncOptions:
+      - Validate=true # The validation option
+      - CreateNamespace=true # The option to create a namespace
+      - PrunePropagationPolicy=foreground # The prune propagation policy
+      - PruneLast=true # Whether to prune the last resource

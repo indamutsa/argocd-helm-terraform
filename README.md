@@ -181,39 +181,41 @@ We have have 2-example folder which contains the application.yaml. It is called 
 <!-- prettier-ignore-start -->
 ❯ tree
 .
-├── 1-example
-│   └── application.yaml
-├── 2-example
-│   └── application.yaml
+├── 1-example-app
+│   └── application.yaml
+├── 2-example-apps
+│   └── application.yaml
+├── 3-example-helm
+│   └── application.yaml
 ├── app
-│   ├── 0-namespace.yaml
-│   └── 1-deployment.yaml
+│   ├── 0-namespace.yaml
+│   └── 1-deployment.yaml
 ├── argocd-values.yaml
 ├── build-agent.sh
 ├── environments
-│   └── staging
-│       ├── app
-│       │   ├── 0-namespace.yaml
-│       │   └── 1-deployment.yaml
-│       ├── apps
-│       │   ├── app.yaml
-│       │   └── second-app.yaml
-│       └── second-app
-│           ├── 0-namespace.yaml
-│           └── 1-deployment.yaml
+│   └── staging
+│       ├── app
+│       │   ├── 0-namespace.yaml
+│       │   └── 1-deployment.yaml
+│       ├── apps
+│       │   ├── app.yaml
+│       │   └── second-app.yaml
+│       └── second-app
+│           ├── 0-namespace.yaml
+│           └── 1-deployment.yaml
+├── metrics-server-values.yaml
 ├── README.md
-├── terraform-cloud
-│   ├── 0-provider.tf
-│   ├── 1-provider.tf
-│   ├── argocd-default-values.yaml
-│   ├── argocd-values.yaml
-│   ├── terraform.tfstate
-│   ├── terraform.tfstate.backup
-│   └── values
-│       └── argocd.yaml
-└── :wq
+└── terraform-cloud
+    ├── 0-provider.tf
+    ├── 1-provider.tf
+    ├── argocd-default-values.yaml
+    ├── argocd-values.yaml
+    ├── terraform.tfstate
+    ├── terraform.tfstate.backup
+    └── values
+        └── argocd.yaml
 
-10 directories, 21 files
+11 directories, 22 files
 
 <!-- prettier-ignore-end -->
 
@@ -235,6 +237,51 @@ Delete the application in example 2 folder to clean up the resources
 kubectl delete -f 2-example/application.yaml
 ```
 
-<!-- ```bash
-helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.35.4 -f terraform/argocd-default-values.yaml
-```` -->
+Now that everything is running, let us deploy using helm charts.
+
+As an example let us use metric-server, it is used to get the metrics of the cluster.
+
+```bash
+helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+```
+
+Look for it in the helm repo
+
+```bash
+helm search repo metrics-server
+```
+
+To overwrite the default values, we can get the values file from the repo and edit it
+
+```bash
+helm show values metrics-server/metrics-server --version 3.11.0  > metrics-server-values.yaml
+```
+
+The application.yaml file will be used to deploy the metrics-server using helm charts. 3-example helm.
+
+We run
+
+```bash
+kubectl apply -f 3-example-helm/application.yaml
+```
+
+And then metrics server pods will be deployed in the argo namespace.
+You can check it by running
+
+```bash
+kubectl get po -n argo
+```
+
+But also inside argocd dashboard.
+
+Tear down the resources:
+
+```bash
+kubectl delete -f 3-example-helm/application.yaml
+```
+
+All the resoureces including argocd deployment can be deleted by running
+
+```bash
+❯ kubectl delete all,secrets,configmaps,pv,pvc --all --all-namespaces
+```
